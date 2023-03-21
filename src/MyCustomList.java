@@ -2,6 +2,7 @@ public class MyCustomList<T> implements IMyList<T> {
     private T[] objArray;
     private final Class<T> dataType;
     //WE GOT TEK!
+    @SuppressWarnings("unchecked")
     public MyCustomList(Class<T> dataType){
         this.dataType = dataType;
         this.objArray = (T[]) java.lang.reflect.Array.newInstance(dataType, 0);
@@ -12,16 +13,15 @@ public class MyCustomList<T> implements IMyList<T> {
         return objArray[i];
     }
 
+    @SuppressWarnings("unchecked")
     public void add(T element) {
         T[] tempArray = (T[]) java.lang.reflect.Array.newInstance(dataType, objArray.length + 1);
-        for(int i = 0; i < objArray.length; i++)
-        {
-            tempArray[i] = objArray[i];
-        }
+        System.arraycopy(objArray, 0, tempArray, 0, objArray.length);
         tempArray[objArray.length] = element;
         objArray = tempArray;
     }
 
+    @SuppressWarnings("unchecked")
     public void add(int index, T element) {
         T[] tempArray = (T[]) java.lang.reflect.Array.newInstance(dataType, objArray.length + 1);
         for(int i = 0; i < objArray.length+1; i++)
@@ -39,19 +39,18 @@ public class MyCustomList<T> implements IMyList<T> {
         objArray = tempArray;
     }
 
+    @SuppressWarnings("unchecked")
     public void clear() {
         this.objArray = (T[]) java.lang.reflect.Array.newInstance(this.dataType, 0);
     }
 
+    @SuppressWarnings("unchecked")
     public T pop() {
         if(objArray.length == 0)
           return null;
         T tempElem = objArray[objArray.length-1];
         T[] tempArray = (T[]) java.lang.reflect.Array.newInstance(this.dataType, objArray.length-1);
-        for(int i = 0; i < objArray.length-1; i++)
-        {
-            tempArray[i] = objArray[i];
-        }
+        System.arraycopy(objArray, 0, tempArray, 0, objArray.length-1);
         objArray = tempArray;
         return tempElem;
     }
@@ -60,6 +59,7 @@ public class MyCustomList<T> implements IMyList<T> {
         return objArray.length;
     }
 
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
         if(index < 0 || index >= objArray.length)
           return null;
@@ -83,12 +83,14 @@ public class MyCustomList<T> implements IMyList<T> {
         {
             return "[]";
         }
-        String ret = "";
-        ret += "[";
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
         for (int i = 0; i < objArray.length-1; i++) {
-            ret += objArray[i] + ", ";
+            sb.append(objArray[i]);
+            sb.append(", ");
         }
-        ret += objArray[objArray.length-1] + "]\n";
-        return ret;
+        sb.append(objArray[objArray.length-1]);
+        sb.append("]");
+        return sb.toString();
     }
 }
